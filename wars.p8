@@ -3,7 +3,7 @@ version 8
 __lua__
 
 function _init()
-	cursor = { x = 0, y = 0, sprite = 0, timer = 0 }
+	cursor = { x = 0, y = 0, sprite = 0, timer = 0, object_selected = false }
 	unit = { x = 8, y = 8, sprite = 16 }
 	unit2 = { x = 4, y = 4, sprite = 32 }
 	objects = { unit, unit2 }
@@ -28,11 +28,28 @@ function handle_input()
 	if (btnp(1)) then cursor.x += 1 end
 	if (btnp(2)) then cursor.y -= 1 end
 	if (btnp(3)) then cursor.y += 1 end
-	if (btnp(4)) then confirm_unit() end
+	if (btnp(4)) then confirm_object() end
 end
 
-function confirm_unit()
+function confirm_object()
 	cursor.timer = 1
+	if (cursor.object_selected) then
+		cursor.object_selected.x = cursor.x
+		cursor.object_selected.y = cursor.y
+		cursor.object_selected = false
+	else
+		cursor.object_selected = get_object()
+	end
+end
+
+function get_object()
+	for object in all(objects) do
+		if cursor.x == object.x then
+			if cursor.y == object.y then
+				return object
+			end
+		end
+	end
 end
 
 function draw_objects()
