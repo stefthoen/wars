@@ -3,46 +3,16 @@ version 8
 __lua__
 
 function _init()
-	cursor = {}
-	cursor.x = 0  
-	cursor.y = 0
-	cursor.sprite = 0
-	cursor.confirm = false
-
-	unit = {}
-	unit.x = 8
-	unit.y = 8
-	unit.sprite = 16
-
-	unit2 = {
-		x = 4,
-		y = 4,
-		sprite = 32
-	}
-
+	cursor = { x = 0, y = 0, sprite = 0, timer = 0 }
+	unit = { x = 8, y = 8, sprite = 16 }
+	unit2 = { x = 4, y = 4, sprite = 32 }
 	objects = { unit, unit2 }
-
 	block = 8 -- grid block size
-
-	timer = 0
-	frame = 0
 end
 
 function _update60()
-	--frame = flr(timer / 20)
-	--timer = (timer + 1) % 60
 	handle_input()
-	if cursor.confirm then 
-		timer = (timer + 1) % 60 
-		frame = flr(timer / 20)
-
-		cursor.sprite = frame
-
-		if frame > 2 then
-			cursor.sprite = 0
-			cursor.confirm = false
-		end
-	end
+	if (cursor.timer > 0) cursor.timer = (cursor.timer + 1) % 6
 end
 
 function _draw()
@@ -50,8 +20,7 @@ function _draw()
 	draw_background()
 	draw_cursor()
 	draw_objects()
-	print(timer)
-	print(frame)
+	print(cursor.timer)
 end
 
 function handle_input()
@@ -63,7 +32,7 @@ function handle_input()
 end
 
 function confirm_unit()
-	cursor.confirm = true
+	cursor.timer = 1
 end
 
 function draw_objects()
@@ -73,7 +42,11 @@ function draw_objects()
 end
 
 function draw_cursor()
-	spr(cursor.sprite, cursor.x * block, cursor.y * block)
+	if (cursor.timer > 0) then
+		spr(flr(cursor.timer / 2), cursor.x * block, cursor.y * block)
+	else
+		spr(cursor.sprite, cursor.x * block, cursor.y * block)
+	end
 end
 
 function draw_background()
