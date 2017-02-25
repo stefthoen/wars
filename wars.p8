@@ -15,7 +15,6 @@ function _init()
 	unit = { x = 0, y = 0, sprite = 16 }
 	unit2 = { x = 4, y = 4, sprite = 32 }
 	objects = { unit, unit2 }
-	block = 8 -- grid block size
 end
 
 function _update60()
@@ -85,15 +84,15 @@ function _update60()
 
 		function draw_objects()
 			for object in all(objects) do
-				spr(object.sprite, object.x * block, object.y * block)
+				spr(object.sprite, object.x * 8, object.y * 8)
 			end
 		end
 
 		function draw_cursor()
 			if (cursor.timer > 0) then
-				spr(flr(cursor.timer / 2), cursor.x * block, cursor.y * block)
+				spr(flr(cursor.timer / 2), cursor.x * 8, cursor.y * 8)
 			else
-				spr(cursor.sprite, cursor.x * block, cursor.y * block)
+				spr(cursor.sprite, cursor.x * 8, cursor.y * 8)
 			end
 
 			if (not cursor.object_selected) then
@@ -120,7 +119,7 @@ function _update60()
 				else
 					arr = cursor.arr_vert
 				end
-				spr(arr, pos.x * block, pos.y * block)
+				spr(arr, pos.x * 8, pos.y * 8)
 				i += 1
 			end
 		end
