@@ -19,114 +19,116 @@ end
 
 function _update60()
 	handle_input()
-	if (cursor.timer > 0) cursor.timer = (cursor.timer + 1) % 6
+	if (cursor.timer > 0) then 
+		cursor.timer = (cursor.timer + 1) % 6
+	end
+end
+
+function _draw()
+	cls()
+	draw_background()
+	draw_cursor()
+	draw_objects()
+end
+
+function handle_input()
+	if (btnp(0)) then 
+		cursor.x -= 1 
+		store_path()
+	end
+	if (btnp(1)) then 
+		cursor.x += 1 
+		store_path()
+	end
+	if (btnp(2)) then 
+		cursor.y -= 1 
+		store_path()
+	end
+	if (btnp(3)) then 
+		cursor.y += 1 
+		store_path()
+	end
+	if (btnp(4)) then 
+		confirm_object() 
+	end
+end
+
+function store_path()
+	if (cursor.object_selected) then 
+		if (count(cursor.path) > 0) then
+		end 
+		add(cursor.path, { x = cursor.x, y = cursor.y })
+	end
+end
+
+function confirm_object()
+	cursor.timer = 1
+	if (cursor.object_selected) then
+		if (get_object()) then return false end
+		cursor.object_selected.x = cursor.x
+		cursor.object_selected.y = cursor.y
+		cursor.object_selected = false
+		cursor.path = {}
+	else
+		cursor.object_selected = get_object()
+	end
+end
+
+function get_object()
+	for object in all(objects) do
+		if cursor.x == object.x then
+			if cursor.y == object.y then
+				return object
+			end
+		end
+	end
+end
+
+function draw_objects()
+	for object in all(objects) do
+		spr(object.sprite, object.x * 8, object.y * 8)
+	end
+end
+
+function draw_cursor()
+	if (cursor.timer > 0) then
+		spr(flr(cursor.timer / 2), cursor.x * 8, cursor.y * 8)
+	else
+		spr(cursor.sprite, cursor.x * 8, cursor.y * 8)
 	end
 
-	function _draw()
-		cls()
-		draw_background()
-		draw_cursor()
-		draw_objects()
+	if (not cursor.object_selected) then
+		return false
 	end
 
-	function handle_input()
-		if (btnp(0)) then 
-			cursor.x -= 1 
-			store_path()
+	local arr = cursor.arr_vert
+	local prev_pos = {}
+	local i = 1
+
+	for pos in all(cursor.path) do
+		if (i > 1) then
+			prev_pos = { 
+				x = cursor.path[i-1].x,
+				y = cursor.path[i-1].y,
+			}
+		else
+			prev_pos.x = cursor.object_selected.x
+			prev_pos.y = cursor.object_selected.y
 		end
-		if (btnp(1)) then 
-			cursor.x += 1 
-			store_path()
+
+		if (prev_pos.x ~= pos.x) then
+			arr = cursor.arr_hor
+		else
+			arr = cursor.arr_vert
 		end
-		if (btnp(2)) then 
-			cursor.y -= 1 
-			store_path()
-		end
-		if (btnp(3)) then 
-			cursor.y += 1 
-			store_path()
-		end
-		if (btnp(4)) then 
-			confirm_object() 
-		end
+		spr(arr, pos.x * 8, pos.y * 8)
+		i += 1
 	end
+end
 
-	function store_path()
-		if (cursor.object_selected) then 
-			if (count(cursor.path) > 0) then
-			end 
-			add(cursor.path, { x = cursor.x, y = cursor.y })
-		end
-	end
-
-	function confirm_object()
-		cursor.timer = 1
-		if (cursor.object_selected) then
-			if (get_object()) return false
-				cursor.object_selected.x = cursor.x
-				cursor.object_selected.y = cursor.y
-				cursor.object_selected = false
-				cursor.path = {}
-			else
-				cursor.object_selected = get_object()
-			end
-		end
-
-		function get_object()
-			for object in all(objects) do
-				if cursor.x == object.x then
-					if cursor.y == object.y then
-						return object
-					end
-				end
-			end
-		end
-
-		function draw_objects()
-			for object in all(objects) do
-				spr(object.sprite, object.x * 8, object.y * 8)
-			end
-		end
-
-		function draw_cursor()
-			if (cursor.timer > 0) then
-				spr(flr(cursor.timer / 2), cursor.x * 8, cursor.y * 8)
-			else
-				spr(cursor.sprite, cursor.x * 8, cursor.y * 8)
-			end
-
-			if (not cursor.object_selected) then
-				return false
-			end
-
-			local arr = cursor.arr_vert
-			local prev_pos = {}
-			local i = 1
-
-			for pos in all(cursor.path) do
-				if (i > 1) then
-					prev_pos = { 
-						x = cursor.path[i-1].x,
-						y = cursor.path[i-1].y,
-					}
-				else
-					prev_pos.x = cursor.object_selected.x
-					prev_pos.y = cursor.object_selected.y
-				end
-
-				if (prev_pos.x ~= pos.x) then
-					arr = cursor.arr_hor
-				else
-					arr = cursor.arr_vert
-				end
-				spr(arr, pos.x * 8, pos.y * 8)
-				i += 1
-			end
-		end
-
-		function draw_background()
-			map(0, 0, 0, 0)
-		end
+function draw_background()
+	map(0, 0, 0, 0)
+end
 __gfx__
 7cccccc7777cc777777777770000000000cccc000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 c000000c70000007700000070000000000cccc000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
