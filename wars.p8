@@ -134,10 +134,11 @@ function draw_cursor()
 	end
 end
 
--- Need to check previous and next position
--- 
-
 function draw_path(pos, prev_pos, next_pos)
+	local arr
+	local flip_x = false
+	local flip_y = false
+
 	if (prev_pos.x ~= pos.x) then
 		-- horizontal
 		arr = cursor.arr_hor
@@ -151,24 +152,13 @@ function draw_path(pos, prev_pos, next_pos)
 		arr = cursor.arr_corner
 		if next_pos.y > pos.y then
 			if prev_pos.x < pos.x then
-				spr(arr, pos.x * 8, pos.y * 8, 1, 1, true, true)
-				return
+				flip_x = true flip_y = true
 			else
-				spr(arr, pos.x * 8, pos.y * 8, 1, 1, false, true)
-				return
+				flip_y = true
 			end
+		elseif next_pos.y < pos.y and prev_pos.x < pos.x then
+			flip_x = true
 		end
-		if next_pos.y < pos.y then
-			arr = cursor.arr_corner
-			if prev_pos.x < pos.x then
-				spr(arr, pos.x * 8, pos.y * 8, 1, 1, true, false)
-				return
-			else
-				spr(arr, pos.x * 8, pos.y * 8)
-				return
-			end
-		end
-
 	else
 		-- vertical
 		arr = cursor.arr_vert
@@ -180,27 +170,18 @@ function draw_path(pos, prev_pos, next_pos)
 
 		-- corner
 		arr = cursor.arr_corner
-		if next_pos.x > pos.x then
+		if next_pos.x > pos.x and prev_pos.y > pos.y then
+			flip_y = true
+		elseif next_pos.x < pos.x then
 			if prev_pos.y < pos.y then
-				spr(arr, pos.x * 8, pos.y * 8)
-				return
+				flip_x = true
 			else
-				spr(arr, pos.x * 8, pos.y * 8, 1, 1, false, true)
-				return
-			end
-		end
-		if next_pos.x < pos.x then
-			arr = cursor.arr_corner
-			if prev_pos.y < pos.y then
-				spr(arr, pos.x * 8, pos.y * 8, 1, 1, true, false)
-				return
-			else
-				spr(arr, pos.x * 8, pos.y * 8, 1, 1, true, true)
-				return
+				flip_x = true flip_y = true
 			end
 		end
 	end
 
+	spr(arr, pos.x * 8, pos.y * 8, 1, 1, flip_x, flip_y)
 end
 
 function draw_background()
