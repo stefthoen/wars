@@ -8,6 +8,7 @@ function _init()
 		sprite = 0, 
 		arr_hor = 3,
 		arr_vert = 4,
+		arr_corner = 5,
 		timer = 0, 
 		object_selected = false, 
 		path = {}
@@ -127,22 +128,79 @@ function draw_cursor()
 			}
 		end
 
-		if (prev_pos.x ~= pos.x) then
-			arr = cursor.arr_hor
-		else
-			arr = cursor.arr_vert
-			printh(next_pos)
-			if next_pos.x ~= -1 then
-				if (next_pos.x > pos.x) then
-					arr = 5
-				end
+		draw_path(pos, prev_pos, next_pos)
+
+		i += 1
+	end
+end
+
+-- Need to check previous and next position
+-- 
+
+function draw_path(pos, prev_pos, next_pos)
+	if (prev_pos.x ~= pos.x) then
+		-- horizontal
+		arr = cursor.arr_hor
+
+		if next_pos.y == -1 or next_pos.y == pos.y then 
+			spr(arr, pos.x * 8, pos.y * 8)
+			return 
+		end
+
+		--corner
+		arr = cursor.arr_corner
+		if next_pos.y > pos.y then
+			if prev_pos.x < pos.x then
+				spr(arr, pos.x * 8, pos.y * 8, 1, 1, true, true)
+				return
+			else
+				spr(arr, pos.x * 8, pos.y * 8, 1, 1, false, true)
+				return
+			end
+		end
+		if next_pos.y < pos.y then
+			arr = cursor.arr_corner
+			if prev_pos.x < pos.x then
+				spr(arr, pos.x * 8, pos.y * 8, 1, 1, true, false)
+				return
+			else
+				spr(arr, pos.x * 8, pos.y * 8)
+				return
 			end
 		end
 
+	else
+		-- vertical
+		arr = cursor.arr_vert
 
-		spr(arr, pos.x * 8, pos.y * 8)
-		i += 1
+		if next_pos.x == -1 or next_pos.x == pos.x then 
+			spr(arr, pos.x * 8, pos.y * 8)
+			return 
+		end
+
+		-- corner
+		arr = cursor.arr_corner
+		if next_pos.x > pos.x then
+			if prev_pos.y < pos.y then
+				spr(arr, pos.x * 8, pos.y * 8)
+				return
+			else
+				spr(arr, pos.x * 8, pos.y * 8, 1, 1, false, true)
+				return
+			end
+		end
+		if next_pos.x < pos.x then
+			arr = cursor.arr_corner
+			if prev_pos.y < pos.y then
+				spr(arr, pos.x * 8, pos.y * 8, 1, 1, true, false)
+				return
+			else
+				spr(arr, pos.x * 8, pos.y * 8, 1, 1, true, true)
+				return
+			end
+		end
 	end
+
 end
 
 function draw_background()
