@@ -137,13 +137,13 @@ end
 function draw_path(pos, prev_pos, next_pos)
 	px, py, ppx, ppy, npx, npy = pos.x, pos.y, prev_pos.x, prev_pos.y, next_pos.x, next_pos.y
 
-	arr = (ppx != px) and cursor.arr_hor or cursor.arr_vert
-	flip_x = npx < px
-	flip_y = npy > py
+	s = (ppx != px) and cursor.arr_hor or cursor.arr_vert
+	fx = npx < px
+	fy = npy > py
 	
-	if (npx > 0 and ((ppx == px and npx != px) or (ppy == py and npy != py))) arr = cursor.arr_corner
+	if (ppx >= 0 and npx >= 0 and ((ppx == px and npx != px) or (ppy == py and npy != py))) s = cursor.arr_corner
 	
-	spr(arr, px * 8, py * 8, 1, 1, flip_x, flip_y)
+	spr(s, px * 8, py * 8, 1, 1, fx, fy)
 end
 
 function draw_background()
