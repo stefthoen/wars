@@ -135,13 +135,15 @@ function draw_cursor()
 end
 
 function draw_path(pos, prev_pos, next_pos)
-	local arr = (prev_pos.x != pos.x) and cursor.arr_hor or cursor.arr_vert
-	local flip_x = prev_pos.x < pos.x
-	local flip_y = next_pos.y > pos.y
+	px, py, ppx, ppy, npx, npy = pos.x, pos.y, prev_pos.x, prev_pos.y, next_pos.x, next_pos.y
+
+	arr = (ppx != px) and cursor.arr_hor or cursor.arr_vert
+	flip_x = npx < px
+	flip_y = npy > py
 	
-	if (next_pos.x > 0 and ((prev_pos.x == pos.x and next_pos.x != pos.x) or (prev_pos.y == pos.y and next_pos.y != pos.y))) arr = cursor.arr_corner
+	if (npx > 0 and ((ppx == px and npx != px) or (ppy == py and npy != py))) arr = cursor.arr_corner
 	
-	spr(arr, pos.x * 8, pos.y * 8, 1, 1, flip_x, flip_y)
+	spr(arr, px * 8, py * 8, 1, 1, flip_x, flip_y)
 end
 
 function draw_background()
