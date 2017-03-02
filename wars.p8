@@ -152,16 +152,14 @@ function draw_path(pos, prev_pos, next_pos)
 		arr = cursor.arr_corner
 		if next_pos.y < pos.y then
 			if prev_pos.x < pos.x then
-				flip_x = true flip_y = false
+				flip_x = true
 			else
-				flip_x = false flip_y = false
 			end
 		elseif next_pos.y > pos.y then
 			if prev_pos.x < pos.x then
 				flip_y = true
 				flip_x = true
 			else
-				flip_x = false
 				flip_y = true
 			end
 		end
@@ -176,13 +174,17 @@ function draw_path(pos, prev_pos, next_pos)
 
 		-- corner
 		arr = cursor.arr_corner
-		if next_pos.x > pos.x and prev_pos.y > pos.y then
-			flip_y = true
+		if next_pos.x > pos.x then 
+			if prev_pos.y < pos.y then
+			else 
+				flip_y = true
+			end
 		elseif next_pos.x < pos.x then
 			if prev_pos.y < pos.y then
 				flip_x = true
 			else
-				flip_x = true flip_y = true
+				flip_x = true
+				flip_y = true
 			end
 		end
 	end
