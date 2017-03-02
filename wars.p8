@@ -3,8 +3,8 @@ version 8
 __lua__
 function _init()
 	cursor = { 
-		x = 0, 
-		y = 0, 
+		x = 5, 
+		y = 5, 
 		sprite = 0, 
 		arr_hor = 3,
 		arr_vert = 4,
@@ -13,7 +13,7 @@ function _init()
 		object_selected = false, 
 		path = {}
 	}
-	unit = { x = 0, y = 0, sprite = 16 }
+	unit = { x = 5, y = 5, sprite = 16 }
 	unit2 = { x = 4, y = 4, sprite = 32 }
 	objects = { unit, unit2 }
 end
@@ -150,14 +150,20 @@ function draw_path(pos, prev_pos, next_pos)
 
 		--corner
 		arr = cursor.arr_corner
-		if next_pos.y > pos.y then
+		if next_pos.y < pos.y then
 			if prev_pos.x < pos.x then
-				flip_x = true flip_y = true
+				flip_x = true flip_y = false
 			else
+				flip_x = false flip_y = false
+			end
+		elseif next_pos.y > pos.y then
+			if prev_pos.x < pos.x then
+				flip_y = true
+				flip_x = true
+			else
+				flip_x = false
 				flip_y = true
 			end
-		elseif next_pos.y < pos.y and prev_pos.x < pos.x then
-			flip_x = true
 		end
 	else
 		-- vertical
