@@ -138,10 +138,8 @@ function draw_path(pos, prev_pos, next_pos)
 	px, py, ppx, ppy, npx, npy = pos.x, pos.y, prev_pos.x, prev_pos.y, next_pos.x, next_pos.y
 
 	s = (ppx != px) and cursor.arr_hor or cursor.arr_vert
-	--fx = npx < px
-	--fy = npy > py
-    fx = (ppx < px) or (ppy < py)
-    fy = (npy > py) or (ppy > py)
+    fx = (ppx == px and npx < px) or (ppx < px and npx == px)
+    fy = (ppy == py and npy > py) or (ppy > py and npy == py)
 	
 	if (ppx >= 0 and npx >= 0 and ((ppx == px and npx != px) or (ppy == py and npy != py))) s = cursor.arr_corner
 	
