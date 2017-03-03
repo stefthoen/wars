@@ -3,8 +3,8 @@ version 8
 __lua__
 function _init()
 	cursor = { 
-		x = 0, 
-		y = 0, 
+		x = 5, 
+		y = 5, 
 		sprite = 0, 
 		arr_hor = 3,
 		arr_vert = 4,
@@ -13,7 +13,7 @@ function _init()
 		object_selected = false, 
 		path = {}
 	}
-	unit = { x = 0, y = 0, sprite = 16 }
+	unit = { x = 5, y = 5, sprite = 16 }
 	unit2 = { x = 4, y = 4, sprite = 32 }
 	objects = { unit, unit2 }
 end
@@ -141,7 +141,9 @@ function draw_path(pos, prev_pos, next_pos)
     fx = (ppx == px and npx < px) or (ppx < px and npx == px)
     fy = (ppy == py and npy > py) or (ppy > py and npy == py)
 	
-	if (ppx >= 0 and npx >= 0 and ((ppx == px and npx != px) or (ppy == py and npy != py))) s = cursor.arr_corner
+	if (ppx >= 0 and npx >= 0 and ((ppx == px and npx != px) or (ppy == py and npy != py))) then
+        s = cursor.arr_corner
+    end
 	
 	spr(s, px * 8, py * 8, 1, 1, fx, fy)
 end
