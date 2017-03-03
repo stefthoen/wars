@@ -135,61 +135,17 @@ function draw_cursor()
 end
 
 function draw_path(pos, prev_pos, next_pos)
-	local arr
-	local flip_x = false
-	local flip_y = false
+	px, py, ppx, ppy, npx, npy = pos.x, pos.y, prev_pos.x, prev_pos.y, next_pos.x, next_pos.y
 
-	if (prev_pos.x ~= pos.x) then
-		-- horizontal
-		arr = cursor.arr_hor
-
-		if next_pos.y == -1 or next_pos.y == pos.y then 
-			spr(arr, pos.x * 8, pos.y * 8)
-			return 
-		end
-
-		--corner
-		arr = cursor.arr_corner
-		if next_pos.y < pos.y then
-			if prev_pos.x < pos.x then
-				flip_x = true
-			else
-			end
-		elseif next_pos.y > pos.y then
-			if prev_pos.x < pos.x then
-				flip_y = true
-				flip_x = true
-			else
-				flip_y = true
-			end
-		end
-	else
-		-- vertical
-		arr = cursor.arr_vert
-
-		if next_pos.x == -1 or next_pos.x == pos.x then 
-			spr(arr, pos.x * 8, pos.y * 8)
-			return 
-		end
-
-		-- corner
-		arr = cursor.arr_corner
-		if next_pos.x > pos.x then 
-			if prev_pos.y < pos.y then
-			else 
-				flip_y = true
-			end
-		elseif next_pos.x < pos.x then
-			if prev_pos.y < pos.y then
-				flip_x = true
-			else
-				flip_x = true
-				flip_y = true
-			end
-		end
-	end
-
-	spr(arr, pos.x * 8, pos.y * 8, 1, 1, flip_x, flip_y)
+	s = (ppx != px) and cursor.arr_hor or cursor.arr_vert
+    fx = (ppx == px and npx < px) or (ppx < px and npx == px)
+    fy = (ppy == py and npy > py) or (ppy > py and npy == py)
+	
+	if (ppx >= 0 and npx >= 0 and ((ppx == px and npx != px) or (ppy == py and npy != py))) then
+        s = cursor.arr_corner
+    end
+	
+	spr(s, px * 8, py * 8, 1, 1, fx, fy)
 end
 
 function draw_background()
